@@ -1,16 +1,16 @@
 package Models;
 
 public class User {
-	String username;
-	String password;
-	UserRole role;
-	String firstname;
-	String lastname;
-	String email;
-	String phonenumber;
-	boolean verified;
+	public String username;
+	public String password;
+	public UserRole role;
+	public String firstname;
+	public String lastname;
+	public String email;
+	public String phonenumber;
+	public boolean verified;
 	
-	User(
+	public User(
 		String username,
 		String password,
 		UserRole role,
