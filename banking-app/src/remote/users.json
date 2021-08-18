@@ -1,3 +1,44 @@
 {
-"users":[]
+	"users":[
+		{
+			"username":"employee1",
+			"password": "pass",
+			"role": "employee",
+			"firstname":"Charles",
+			"lastname": "Hardy",
+			"email": "someemail@somedomain.com",
+			"phonenumber": "1112223333",
+			"verified": true
+		},
+		{
+			"username":"admin1",
+			"password": "pass",
+			"role": "admin",
+			"firstname":"Chuck",
+			"lastname": "Norris",
+			"email": "someotheremail@somedomain.com",
+			"phonenumber": "3332221111",
+			"verified": true
+		},
+		{
+			"username":"customer1",
+			"password": "pass",
+			"role": "customer",
+			"firstname":"Mary",
+			"lastname": "Jane",
+			"email": "yetanotheremail@somedomain.com",
+			"phonenumber": "4443331111",
+			"verified": true
+		},
+		{
+			"username":"customer2",
+			"password": "pass",
+			"role": "customer",
+			"firstname":"Matt",
+			"lastname": "Jane",
+			"email": "anotheremail@somedomain.com",
+			"phonenumber": "4443332222",
+			"verified": true
+		}
+	]
 }
