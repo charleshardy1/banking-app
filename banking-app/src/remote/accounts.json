@@ -6,7 +6,8 @@
 			"name":"home projects",
 			"type": "checking",
 			"datecreated": "08/08/2020",
-			"balance": 15897
+			"balance": 15897,
+			"verified:": true
 		},
 		{
 			"id": "acde3589-d12c-34c3-a478-556642441111",
@@ -14,7 +15,8 @@
 			"name":"bills",
 			"type": "checking",
 			"datecreated": "04/18/2015",
-			"balance": 2000
+			"balance": 2000,
+			"verified": true
 		}
 	]
 }
