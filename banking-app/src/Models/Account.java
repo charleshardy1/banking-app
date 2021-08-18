@@ -1,8 +1,10 @@
 package Models;
 
+import java.util.List;
+
 public class Account {
 	public String ID;
-	public String [] holders;
+	public List<String> holders;
 	public String name;
 	public AccountType type;
 	public String dateCreated;
@@ -12,7 +14,7 @@ public class Account {
 	
 	public Account(
 			String ID,
-			String [] holders,
+			List<String> holders,
 			String name,
 			AccountType type,
 			String dateCreated,

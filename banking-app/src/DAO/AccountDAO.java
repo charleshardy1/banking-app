@@ -77,10 +77,17 @@ public class AccountDAO {
 			   if(accountType == "checking") type = AccountType.checking;
 			   else type = AccountType.saving;
 			   
+			   List<String> holders = new ArrayList<String>();
+			   Object[] accHolders = ((JSONArray)account.get("holders")).toArray();
+			   for(Object holder : accHolders) {
+				   holders.add(holder.toString());
+			   }
+			   
+			   
 			   Accounts.add(
 				   new Account(
 					   (String) account.get("id"),
-					   (String []) account.get("holder"),
+					   holders,
 					   (String) account.get("name"),
 					   type,
 					   (String) account.get("datecreated"),
