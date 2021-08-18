@@ -1,19 +1,19 @@
 package Controller;
 
+import DAO.AccountDAO;
 import DAO.UserDAO;
+import Models.Account;
 import Models.User;
 
 public class Controller {
 
 	public static void main(String[] args) {
-		UserDAO userDAO = new UserDAO();
-		for(User user : userDAO.users) {
-			System.out.println(user.username);
+		AccountDAO accountDAO = new AccountDAO();
+		for(Account user : accountDAO.accounts) {
+			System.out.println(user.name);
 		}
-		
-		userDAO.users.remove(0);
-		
-		userDAO.save();
+		accountDAO.accounts.get(0).name = accountDAO.accounts.get(0).name+" mod";
+		accountDAO.save();
 	}
 
 }

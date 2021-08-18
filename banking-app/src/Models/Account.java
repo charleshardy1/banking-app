@@ -2,21 +2,21 @@ package Models;
 
 public class Account {
 	public String ID;
-	public User [] holders;
+	public String [] holders;
 	public String name;
 	public AccountType type;
 	public String dateCreated;
-	public double balance;
+	public long balance;
 	public boolean verified;
 	
 	
-	Account(
+	public Account(
 			String ID,
-			User [] holders,
+			String [] holders,
 			String name,
 			AccountType type,
 			String dateCreated,
-			int balance,
+			long balance,
 			boolean verified
 	){
 		this.ID = ID;
