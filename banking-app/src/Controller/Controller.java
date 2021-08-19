@@ -2,6 +2,7 @@ package Controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import DAO.AccountDAO;
 import DAO.UserDAO;
@@ -56,7 +57,7 @@ public class Controller {
 		}
 		
 		account.verified = false;
-		
+		account.ID = UUID.randomUUID().toString();
 		accountDAO.accounts.add(account);
 		accountDAO.save();
 	}
@@ -66,7 +67,7 @@ public class Controller {
 		if(currUser.role == UserRole.customer) throw new Exception("must be an employee or admin to approve");
 		
 		for(Account accountToChange : accountDAO.accounts) {
-			if(accountToChange.ID == account.ID) {
+			if(accountToChange.ID.equals(account.ID)) {
 				accountToChange.verified = true;
 				accountDAO.save();
 				return;
@@ -79,7 +80,7 @@ public class Controller {
 		if(currUser.role != UserRole.admin) throw new Exception("must be an admin to moddify account");
 		
 		for(Account accountToChange : accountDAO.accounts) {
-			if(accountToChange.ID == account.ID) {
+			if(accountToChange.ID.equals(account.ID)) {
 				accountToChange.ID = account.ID;
 				accountToChange.holders = account.holders;
 				accountToChange.name = account.name;
@@ -98,7 +99,7 @@ public class Controller {
 		if(currUser.role == UserRole.customer) throw new Exception("must be an employee or admin to approve");
 		
 		for(Account accountToRemove : accountDAO.accounts) {
-			if(accountToRemove.ID == account.ID) {
+			if(accountToRemove.ID.equals(account.ID)) {
 				accountDAO.accounts.remove(accountToRemove);
 				accountDAO.save();
 				return;
@@ -109,7 +110,7 @@ public class Controller {
 	public void makeDeposit(Account account, long amount) throws Exception {
 		checkLoggedIn();
 		for(Account accountToDeposit : accountDAO.accounts) {
-			if(accountToDeposit.ID == account.ID) {
+			if(accountToDeposit.ID.equals(account.ID)) {
 				if(!accountToDeposit.holders.contains(currUser.username)) throw new Exception("you do not own this account");
 				accountToDeposit.balance += amount;
 				accountDAO.save();
@@ -121,7 +122,7 @@ public class Controller {
 	public void makeWithdraw(Account account, long amount) throws Exception {
 		checkLoggedIn();
 		for(Account accountToWithdraw : accountDAO.accounts) {
-			if(accountToWithdraw.ID == account.ID) {
+			if(accountToWithdraw.ID.equals(account.ID)) {
 				if(!accountToWithdraw.holders.contains(currUser.username)) throw new Exception("you do not own this account");
 				if(accountToWithdraw.balance < amount) throw new Exception("insufficient funds");
 				accountToWithdraw.balance -= amount;
@@ -154,7 +155,7 @@ public class Controller {
 		if(currUser.role == UserRole.customer) throw new Exception("must be an employee or admin to approve");
 		
 		for(User userToChange : userDAO.users) {
-			if(userToChange.username == user.username) {
+			if(userToChange.username.equals(user.username)) {
 				userToChange.verified = true;
 				accountDAO.save();
 				return;
