@@ -1,10 +1,14 @@
 package View;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import Controller.Controller;
 import Models.Account;
+import Models.AccountType;
 import Models.User;
 import Models.UserRole;
 
@@ -76,17 +80,17 @@ public class BankAppUI {
 			}
 		} else if(input.equals("2")) {
 			System.out.printf("Enter new username:\n\t");
-			String username = scanner.nextLine();
+			String username = scanner.nextLine().trim();
 			System.out.printf("Enter new Password:\n\t");
-			String password = scanner.nextLine();
+			String password = scanner.nextLine().trim();
 			System.out.printf("Enter firstname:\n\t");
-			String firstname = scanner.nextLine();
+			String firstname = scanner.nextLine().trim();
 			System.out.printf("Enter lastname:\n\t");
-			String lastname = scanner.nextLine();
+			String lastname = scanner.nextLine().trim();
 			System.out.printf("Enter email:\n\t");
-			String email = scanner.nextLine();
+			String email = scanner.nextLine().trim();
 			System.out.printf("Enter phonenumber:\n\t");
-			String phonenumber = scanner.nextLine();
+			String phonenumber = scanner.nextLine().trim();
 			User newUser = new User(username, password, UserRole.customer, firstname, lastname, email, phonenumber, false);
 			
 			try {
@@ -123,7 +127,34 @@ public class BankAppUI {
 		input = input.trim();
 		
 		if(input.equals("1")) {
-		
+			System.out.printf("Enter account name:\n\t");
+			String name = scanner.nextLine().trim();
+			AccountType type;
+			
+			System.out.printf("Enter account type(enter saving or checking):\n\t");
+			String typeIn = scanner.nextLine().trim();
+			if(typeIn == AccountType.checking.toString()) {
+				type = AccountType.checking;
+			}else if(typeIn == AccountType.saving.toString()) {
+				type = AccountType.saving;
+			}else {
+				System.out.printf("Invalid input!\n");
+				return response.fail;
+			}
+			
+			List<String> holders = new ArrayList<String>();
+			holders.add(controller.currUser.username);
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy");  
+			LocalDateTime dateCreated = LocalDateTime.now(); 
+			Long balance = (long) 0;
+			
+			Account newAccount = new Account("some id", holders, name, type, dtf.format(dateCreated) ,balance, false);
+			try {
+				controller.createAccount(newAccount);
+			} catch (Exception e) {
+				System.out.printf("Creation of of account Fail!: %s\n",e.getMessage());
+				return response.fail;
+			}
 		}else if(input.equals("2")) {
 			
 		}else if(input.equals("3")) {
