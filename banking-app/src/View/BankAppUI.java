@@ -133,9 +133,9 @@ public class BankAppUI {
 			
 			System.out.printf("Enter account type(enter saving or checking):\n\t");
 			String typeIn = scanner.nextLine().trim();
-			if(typeIn == AccountType.checking.toString()) {
+			if(typeIn.equals(AccountType.checking.toString())) {
 				type = AccountType.checking;
-			}else if(typeIn == AccountType.saving.toString()) {
+			}else if(typeIn.equals(AccountType.saving.toString())) {
 				type = AccountType.saving;
 			}else {
 				System.out.printf("Invalid input!\n");
@@ -151,6 +151,7 @@ public class BankAppUI {
 			Account newAccount = new Account("some id", holders, name, type, dtf.format(dateCreated) ,balance, false);
 			try {
 				controller.createAccount(newAccount);
+				System.out.printf("Account creation Succsess! Please wait for employee or admin to approve account.\n");
 			} catch (Exception e) {
 				System.out.printf("Creation of of account Fail!: %s\n",e.getMessage());
 				return response.fail;

@@ -168,7 +168,7 @@ public class Controller {
 		List<Account> userAccounts = new ArrayList<Account>();
 		
 		for(Account account : accountDAO.accounts) {
-			if(account.holders.contains(user.username)) {
+			if(account.holders.contains(user.username) && account.verified) {
 				userAccounts.add(account);
 			}
 		}
