@@ -111,7 +111,7 @@ public class Controller {
 		checkLoggedIn();
 		for(Account accountToDeposit : accountDAO.accounts) {
 			if(accountToDeposit.ID.equals(account.ID)) {
-				if(!accountToDeposit.holders.contains(currUser.username)) throw new Exception("you do not own this account");
+				if(!accountToDeposit.holders.contains(currUser.username) && currUser.role != UserRole.admin ) throw new Exception("you do not own this account");
 				accountToDeposit.balance += amount;
 				accountDAO.save();
 			}
@@ -123,7 +123,7 @@ public class Controller {
 		checkLoggedIn();
 		for(Account accountToWithdraw : accountDAO.accounts) {
 			if(accountToWithdraw.ID.equals(account.ID)) {
-				if(!accountToWithdraw.holders.contains(currUser.username)) throw new Exception("you do not own this account");
+				if(!accountToWithdraw.holders.contains(currUser.username) && currUser.role != UserRole.admin ) throw new Exception("you do not own this account");
 				if(accountToWithdraw.balance < amount) throw new Exception("insufficient funds");
 				accountToWithdraw.balance -= amount;
 				accountDAO.save();

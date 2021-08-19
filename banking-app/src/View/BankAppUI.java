@@ -1,8 +1,10 @@
 package View;
 
+import java.util.List;
 import java.util.Scanner;
 
 import Controller.Controller;
+import Models.Account;
 import Models.User;
 import Models.UserRole;
 
@@ -10,7 +12,8 @@ public class BankAppUI {
 	private enum response {
 		fail,
 		succsess,
-		exit
+		exit,
+		logout,
 	}
 
 	public static void main(String[] args) {
@@ -27,6 +30,23 @@ public class BankAppUI {
 				} else if(status == response.fail) {
 					continue;
 				}
+			}
+			
+			if(controller.currUser.role == UserRole.customer) {
+				status = customerPrompt(scanner, controller);
+				System.out.printf("\n");
+				if(status == response.succsess) {
+					continue;
+				}else if(status == response.fail) {
+					continue;
+				}else if(status == response.logout){
+					controller.logout();
+					continue;
+				}
+			}else if(controller.currUser.role == UserRole.employee) {
+				
+			}else {
+				
 			}
 			
 		}
@@ -48,7 +68,7 @@ public class BankAppUI {
 			String password = scanner.nextLine();
 			try {
 				controller.login(username, password);
-				System.out.printf("Login Succsess!\n");
+				System.out.printf("Login Succsess!\nWelcome %s %s.\n", controller.currUser.firstname, controller.currUser.lastname);
 				return response.succsess;
 			}catch(Exception e) {
 				System.out.printf("Login Fail!: %s\n",e.getMessage());
@@ -80,9 +100,58 @@ public class BankAppUI {
 		}else if( input.equals("QUIT")) {
 			return response.exit;
 		}else {
-			System.out.printf("Invalid input!%s!\n",input);
+			System.out.printf("Invalid input!\n");
 			return response.fail;
 		}
 	}
 
+	private static response customerPrompt(Scanner scanner, Controller controller) {
+		System.out.printf("Please Select 1, 2, 3, 4, 5, or 6 to make selection, type LOGOUT to exit.(hit enter to submit)\n");
+		System.out.printf("\t1)Create bank account.\n\t2)Create joint bank account.\n");
+		System.out.printf("\t3)Withdraw.\n\t4)Deposit.\n");
+		System.out.printf("\t5)Transfer.\n\t6)View accounts.\n");
+		List<Account> userAccounts;
+		try {
+			userAccounts = controller.getUserAccounts(controller.currUser);
+			
+		} catch (Exception e) {
+			System.out.printf("Retreval of accounts Fail!: %s\n",e.getMessage());
+			return response.fail;
+		}
+		
+		String input = scanner.nextLine();
+		input = input.trim();
+		
+		if(input.equals("1")) {
+		
+		}else if(input.equals("2")) {
+			
+		}else if(input.equals("3")) {
+			
+		}else if(input.equals("4")) {
+			
+		}else if(input.equals("5")) {
+			
+		}else if(input.equals("6")) {
+			printAccounts(userAccounts);
+		}else if(input.equals("LOGOUT")) {
+			return response.logout;
+		}else {
+			System.out.printf("Invalid input!\n");
+			return response.fail;
+		}
+		
+		return response.succsess;
+	}
+	
+	private static void printAccounts(List<Account> userAccounts) {
+		Account account;
+		for(int i = 0; i< userAccounts.size(); i++) {
+			account = userAccounts.get(i);
+			System.out.printf("%d) Account name: %s (%s)\n", i+1, account.name, account.ID);
+			System.out.printf("\ttype: %s\n", account.type);
+			System.out.printf("\tbalance: %02d\n", account.balance);
+			System.out.printf("\tholders: %s\n", account.holders);
+		}
+	}
 }
