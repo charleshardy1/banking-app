@@ -67,9 +67,9 @@ public class BankAppUI {
 		
 		if(input.equals("1")) {
 			System.out.printf("Enter username:\n\t");
-			String username = scanner.nextLine();
+			String username = scanner.nextLine().trim();
 			System.out.printf("Enter Password:\n\t");
-			String password = scanner.nextLine();
+			String password = scanner.nextLine().trim();
 			try {
 				controller.login(username, password);
 				System.out.printf("Login Succsess!\nWelcome %s %s.\n", controller.currUser.firstname, controller.currUser.lastname);
@@ -183,11 +183,35 @@ public class BankAppUI {
 			Account newAccount = new Account("some id", holders, name, type, dtf.format(dateCreated) ,balance, false);
 			
 		}else if(input.equals("3")) {
+			printAccounts(userAccounts);
+			int account;
+			long amount;
+			try {
+				System.out.printf("Please Select account to make withdraw from(type number):\n\t");
+				account = Integer.parseInt(scanner.nextLine().trim());
+				account--;
+				if(account < 0 || account >= userAccounts.size()) throw new Exception("invalid input");
+				System.out.printf("Please enter amount to make withdraw from:\n");
+				amount = Long.parseLong(scanner.nextLine().trim());
+				
+			}catch(Exception e) {
+				System.out.printf("Invalid input!\n");
+				return response.fail;
+			}
+			
+			try {
+				controller.makeWithdraw(userAccounts.get(account), amount);
+				System.out.printf("Withdraw of %d$ from \"%s\" was a Succsess!\n", amount, userAccounts.get(account).name);
+				
+			} catch (Exception e) {
+				System.out.printf("Withdraw from account Fail!: %s\n",e.getMessage());
+				return response.fail;
+			}
 			
 		}else if(input.equals("4")) {
-			
+			printAccounts(userAccounts);
 		}else if(input.equals("5")) {
-			
+			printAccounts(userAccounts);
 		}else if(input.equals("6")) {
 			printAccounts(userAccounts);
 		}else if(input.equals("LOGOUT")) {
