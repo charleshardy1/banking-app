@@ -235,6 +235,36 @@ public class BankAppUI {
 			}
 		}else if(input.equals("5")) {
 			printAccounts(userAccounts);
+			int fromAccount;
+			int toAccount;
+			long amount;
+			try {
+				System.out.printf("Please Select transfer source account (type number):\n\t");
+				fromAccount = Integer.parseInt(scanner.nextLine().trim());
+				fromAccount--;
+				if(fromAccount < 0 || fromAccount >= userAccounts.size()) throw new Exception("invalid input");
+				
+				System.out.printf("Please Select transfer destination account (type number):\n\t");
+				toAccount = Integer.parseInt(scanner.nextLine().trim());
+				toAccount--;
+				if(toAccount < 0 || toAccount >= userAccounts.size()) throw new Exception("invalid input");
+				
+				System.out.printf("Please enter amount to transfer:\n");
+				amount = Long.parseLong(scanner.nextLine().trim());
+				
+			}catch(Exception e) {
+				System.out.printf("Invalid input!\n");
+				return response.fail;
+			}
+			
+			try {
+				controller.makeTransfer(userAccounts.get(fromAccount), userAccounts.get(toAccount), amount);
+				System.out.printf("Transfer of %d$ from \"%s\" to \"%s\" was a Succsess!\n", amount, userAccounts.get(fromAccount).name, userAccounts.get(toAccount).name);
+				
+			} catch (Exception e) {
+				System.out.printf("Transfer Fail!: %s\n",e.getMessage());
+				return response.fail;
+			}
 		}else if(input.equals("6")) {
 			printAccounts(userAccounts);
 		}else if(input.equals("LOGOUT")) {
