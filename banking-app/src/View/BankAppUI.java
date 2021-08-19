@@ -210,6 +210,29 @@ public class BankAppUI {
 			
 		}else if(input.equals("4")) {
 			printAccounts(userAccounts);
+			int account;
+			long amount;
+			try {
+				System.out.printf("Please Select account to make deposit to(type number):\n\t");
+				account = Integer.parseInt(scanner.nextLine().trim());
+				account--;
+				if(account < 0 || account >= userAccounts.size()) throw new Exception("invalid input");
+				System.out.printf("Please enter amount to make deposit to:\n");
+				amount = Long.parseLong(scanner.nextLine().trim());
+				
+			}catch(Exception e) {
+				System.out.printf("Invalid input!\n");
+				return response.fail;
+			}
+			
+			try {
+				controller.makeDeposit(userAccounts.get(account), amount);
+				System.out.printf("Deposit of %d$ to \"%s\" was a Succsess!\n", amount, userAccounts.get(account).name);
+				
+			} catch (Exception e) {
+				System.out.printf("Deposit to account Fail!: %s\n",e.getMessage());
+				return response.fail;
+			}
 		}else if(input.equals("5")) {
 			printAccounts(userAccounts);
 		}else if(input.equals("6")) {
