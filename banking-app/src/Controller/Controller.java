@@ -1,5 +1,8 @@
 package Controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import DAO.AccountDAO;
 import DAO.UserDAO;
 import Models.Account;
@@ -153,5 +156,50 @@ public class Controller {
 				return;
 			}
 		}
+	}
+
+	public List<Account> getUserAccounts(User user) throws Exception{
+		checkLoggedIn();
+		List<Account> userAccounts = new ArrayList<Account>();
+		
+		for(Account account : accountDAO.accounts) {
+			if(account.holders.contains(user.username)) {
+				userAccounts.add(account);
+			}
+		}
+		return userAccounts;
+	}
+	
+	public List<Account> getPendingAccounts() throws Exception{
+		checkLoggedIn();
+		List<Account> pendingAccounts = new ArrayList<Account>();
+		
+		for(Account account : accountDAO.accounts) {
+			if(account.verified == false) {
+				pendingAccounts.add(account);
+			}
+		}
+		return pendingAccounts;
+	}
+
+	public List<Account> getAllClearedAccounts() throws Exception{
+		checkLoggedIn();
+		List<Account> allClearedAccounts = new ArrayList<Account>();
+		
+		for(Account account : accountDAO.accounts) {
+			if(account.verified) {
+				allClearedAccounts.add(account);
+			}
+		}
+		return allClearedAccounts;
+	}
+
+	public List<User> getAllUsers() throws Exception{
+		checkLoggedIn();
+		List<User> users = new ArrayList<User>();
+		for(User user: userDAO.users) {
+			users.add(user);
+		}
+		return users;
 	}
 }
