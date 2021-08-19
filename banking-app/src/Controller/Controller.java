@@ -12,7 +12,7 @@ import Models.UserRole;
 public class Controller {
 	private AccountDAO accountDAO;
 	private UserDAO userDAO;
-	private User currUser;
+	public User currUser;
 	public Controller() {
 		this.accountDAO = new AccountDAO();
 		this.userDAO = new UserDAO();
@@ -25,9 +25,13 @@ public class Controller {
 	
 	public void login(String username, String password) throws Exception {
 		for(User user : userDAO.users) {
-			if(user.username == username && user.password == password) {
-				this.currUser = user;
-				return;
+			if(user.username.equals(username) && user.password.equals(password)) {
+				if(user.verified) {
+					this.currUser = user;
+					return;
+				}else {
+					throw new Exception("account has not been verified.");
+				}
 			}
 		}
 		
@@ -43,7 +47,7 @@ public class Controller {
 		for(String holder : account.holders) {
 			boolean userexists = false;
 			for(User user: userDAO.users) {
-				if(user.username == holder) {
+				if(user.username.contentEquals( holder)) {
 					userexists = true;
 				}
 			}
@@ -135,7 +139,7 @@ public class Controller {
 
 	public void registerCustomer(User newUser) throws Exception {
 		for(User user : userDAO.users) {
-			if(user.username == newUser.username) {
+			if(user.username.equals(newUser.username)) {
 				throw new Exception("username is taken");
 			}
 		}
