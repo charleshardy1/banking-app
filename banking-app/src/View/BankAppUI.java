@@ -157,6 +157,30 @@ public class BankAppUI {
 				return response.fail;
 			}
 		}else if(input.equals("2")) {
+			System.out.printf("Enter account name:\n\t");
+			String name = scanner.nextLine().trim();
+			AccountType type;
+			
+			System.out.printf("Enter account type(enter saving or checking):\n\t");
+			String typeIn = scanner.nextLine().trim();
+			if(typeIn.equals(AccountType.checking.toString())) {
+				type = AccountType.checking;
+			}else if(typeIn.equals(AccountType.saving.toString())) {
+				type = AccountType.saving;
+			}else {
+				System.out.printf("Invalid input!\n");
+				return response.fail;
+			}
+			System.out.printf("Enter other holders (usernames) for the account separated by whitespace:\n\t");
+			String[] otherHolders = scanner.nextLine().trim().split("\\s+");
+			List<String> holders = new ArrayList<String>();
+			holders.add(controller.currUser.username);
+			for(String holder:otherHolders) {holders.add(holder);}
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy");  
+			LocalDateTime dateCreated = LocalDateTime.now(); 
+			Long balance = (long) 0;
+			
+			Account newAccount = new Account("some id", holders, name, type, dtf.format(dateCreated) ,balance, false);
 			
 		}else if(input.equals("3")) {
 			
