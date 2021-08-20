@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import Controller.Controller;
 import Models.Account;
@@ -48,7 +49,17 @@ public class BankAppUI {
 					continue;
 				}
 			}else if(controller.currUser.role == UserRole.employee) {
+				status = empPrompt(scanner, controller);
+				System.out.printf("\n");
 				
+				if(status == response.succsess) {
+					continue;
+				}else if(status == response.fail) {
+					continue;
+				}else if(status == response.logout){
+					controller.logout();
+					continue;
+				}
 			}else {
 				
 			}
@@ -58,6 +69,57 @@ public class BankAppUI {
 		System.out.printf("Goodbye!\n");
 	}
 	
+	private static response empPrompt(Scanner scanner, Controller controller) {
+		System.out.printf("Please Select 1, 2, 3, or 4 to make selection, type LOGOUT to exit.(hit enter to submit)\n");
+		System.out.printf("\t1)View all approved accounts.\n\t2)View all approved customers.\n");
+		System.out.printf("\t3)Approve/Deny an Account.\n\t4)Approve/Deny a customer.\n");
+		String input = scanner.nextLine();
+		input = input.trim();
+		
+		if(input.equals("1")) {
+			List<Account> accounts;
+			try {
+				accounts = controller.getAllClearedAccounts();
+				printAccounts(accounts);
+			} catch (Exception e) {
+				System.out.printf("Retreval of accounts Fail!: %s\n",e.getMessage());
+			}
+			
+		}else if(input.equals("2")) {
+			List<User> users;
+			try {
+				users = controller.getAllClearedUsers().stream().filter((user)->user.role == UserRole.customer).collect(Collectors.toList());
+				printUsers(users);
+			} catch (Exception e) {
+				System.out.printf("Retreval of users Fail!: %s\n",e.getMessage());
+			}
+		}else if(input.equals("3")) {
+			
+		}else if(input.equals("4")) {
+			
+		}else if(input.equals("LOGOUT")) {
+			return response.logout;
+		}else {
+			System.out.printf("Invalid input!\n");
+			return response.fail;
+		}
+		
+		return response.succsess;
+	}
+
+	private static void printUsers(List<User> users) {
+		User user;
+		for(int i = 0; i< users.size(); i++) {
+			user = users.get(i);
+			System.out.printf("%d) Customer name: %s %s\n", i+1, user.firstname, user.lastname);
+			System.out.printf("\tUsername: %s\n", user.username);
+			System.out.printf("\tEmail: %S\n", user.email);
+			System.out.printf("\tPhone: %s\n", user.phonenumber);
+			System.out.printf("\tVerified: %s\n", user.verified);
+		}
+		
+	}
+
 	private static response loginRegisterPrompt(Scanner scanner, Controller controller) {
 		System.out.printf("Please Select 1 or 2 to make selection, type QUIT to exit.(hit enter to submit)\n");
 		System.out.printf("\t1)Login.\n\t2)Register as customer.\n");

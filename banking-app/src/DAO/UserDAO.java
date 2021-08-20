@@ -77,8 +77,8 @@ public class UserDAO {
 			   
 			   user = iterator.next();
 			   userRole = (String) user.get("role");
-			   if(userRole == "admin") role = UserRole.admin;
-			   else if(userRole == "employee") role = UserRole.employee;
+			   if(userRole.equals("admin")) role = UserRole.admin;
+			   else if(userRole.equals("employee")) role = UserRole.employee;
 			   else role = UserRole.customer;
 
 			   users.add(

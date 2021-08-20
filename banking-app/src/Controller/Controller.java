@@ -207,4 +207,13 @@ public class Controller {
 		}
 		return users;
 	}
+	
+	public List<User> getAllClearedUsers() throws Exception{
+		checkLoggedIn();
+		List<User> users = new ArrayList<User>();
+		for(User user: userDAO.users) {
+			if(user.verified) users.add(user);
+		}
+		return users;
+	}
 }
