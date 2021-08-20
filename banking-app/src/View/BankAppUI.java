@@ -94,9 +94,105 @@ public class BankAppUI {
 				System.out.printf("Retreval of users Fail!: %s\n",e.getMessage());
 			}
 		}else if(input.equals("3")) {
+			List<Account> userAccounts;
+			try {
+				userAccounts = controller.getPendingAccounts();
+				printAccounts(userAccounts);
+				
+			} catch (Exception e) {
+				System.out.printf("Retreval of accounts Fail!: %s\n",e.getMessage());
+				return response.fail;
+			}
+			int account;
+			String approval;
+			try {
+				
+				System.out.printf("Please Select account to make approve/deny(type number):\n\t");
+				account = Integer.parseInt(scanner.nextLine().trim());
+				account--;
+				if(account < 0 || account >= userAccounts.size()) throw new Exception("invalid input");
+				System.out.printf("Please enter approve or deny:\n");
+				approval = scanner.nextLine().trim();
+				if(!(approval.equals("approve") || approval.equals("deny"))) {
+					System.out.printf("Invalid input!\n");
+					return response.fail;
+				}
+					
+			}catch(Exception e) {
+				System.out.printf("Invalid input!\n");
+				return response.fail;
+			}
 			
+			if(approval.equals("approve")) {
+				
+				try {
+					controller.verifyAccount(userAccounts.get(account));
+					System.out.printf("Approve account Succsess!\n");
+				} catch (Exception e) {
+					System.out.printf("Approve account Fail!: %s\n",e.getMessage());
+					return response.fail;
+				}
+
+			}else {
+				try {
+					controller.removeAccount((userAccounts.get(account)));
+					System.out.printf("DenyS account Succsess!\n");
+				} catch (Exception e) {
+					System.out.printf("Deny account Fail!: %s\n",e.getMessage());
+					return response.fail;
+				}
+				
+			}
 		}else if(input.equals("4")) {
+			List<User> users;
+			try {
+				users = controller.getAllUsers().stream().filter((user)->!user.verified).collect(Collectors.toList());
+				printUsers(users);
+				
+			} catch (Exception e) {
+				System.out.printf("Retreval of users Fail!: %s\n",e.getMessage());
+				return response.fail;
+			}
+			int user;
+			String approval;
+			try {
+				
+				System.out.printf("Please select customer to approve/deny(type number):\n\t");
+				user = Integer.parseInt(scanner.nextLine().trim());
+				user--;
+				if(user < 0 || user >= users.size()) throw new Exception("invalid input");
+				System.out.printf("Please enter approve or deny:\n");
+				approval = scanner.nextLine().trim();
+				if(!(approval.equals("approve") || approval.equals("deny"))) {
+					System.out.printf("Invalid input!\n");
+					return response.fail;
+				}
+					
+			}catch(Exception e) {
+				System.out.printf("Invalid input!\n");
+				return response.fail;
+			}
 			
+			if(approval.equals("approve")) {
+				
+				try {
+					controller.verifyUser(users.get(user));
+					System.out.printf("Approve user Succsess!\n");
+				} catch (Exception e) {
+					System.out.printf("Approve user Fail!: %s\n",e.getMessage());
+					return response.fail;
+				}
+
+			}else {
+				try {
+					controller.removeUser(users.get(user));
+					System.out.printf("Deny user Succsess!\n");
+				} catch (Exception e) {
+					System.out.printf("Deny user Fail!: %s\n",e.getMessage());
+					return response.fail;
+				}
+				
+			}
 		}else if(input.equals("LOGOUT")) {
 			return response.logout;
 		}else {

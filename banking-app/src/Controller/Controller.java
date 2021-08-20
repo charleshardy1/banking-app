@@ -208,6 +208,19 @@ public class Controller {
 		return users;
 	}
 	
+	public void removeUser(User user) throws Exception {
+		checkLoggedIn();
+		if(currUser.role == UserRole.customer) throw new Exception("must be an employee or admin to approve");
+		
+		for(User userToRemove : userDAO.users) {
+			if(userToRemove.username.equals(user.username)) {
+				userDAO.users.remove(userToRemove);
+				userDAO.save();
+				return;
+			}
+		}
+	}
+	
 	public List<User> getAllClearedUsers() throws Exception{
 		checkLoggedIn();
 		List<User> users = new ArrayList<User>();
