@@ -61,9 +61,18 @@ public class BankAppUI {
 					continue;
 				}
 			}else {
+				status = adminPrompt(scanner, controller);
+				System.out.printf("\n");
 				
+				if(status == response.succsess) {
+					continue;
+				}else if(status == response.fail) {
+					continue;
+				}else if(status == response.logout){
+					controller.logout();
+				
+				}
 			}
-			
 		}
 		scanner.close();
 		System.out.printf("Goodbye!\n");
@@ -444,5 +453,234 @@ public class BankAppUI {
 			System.out.printf("\tbalance: %02d\n", account.balance);
 			System.out.printf("\tholders: %s\n", account.holders);
 		}
+	}
+
+	private static response adminPrompt(Scanner scanner, Controller controller) {
+		System.out.printf("Please Select 1, 2, 3, 4, or 5 to make selection, type LOGOUT to exit.(hit enter to submit)\n");
+		System.out.printf("\t1)View all approved accounts.\n\t2)View all approved customers.\n");
+		System.out.printf("\t3)Approve/Deny an Account.\n\t4)Approve/Deny a customer.\n");
+		System.out.printf("\t5)Modify an Account.\n");
+		String input = scanner.nextLine();
+		input = input.trim();
+		
+		if(input.equals("1")) {
+			List<Account> accounts;
+			try {
+				accounts = controller.getAllClearedAccounts();
+				printAccounts(accounts);
+			} catch (Exception e) {
+				System.out.printf("Retreval of accounts Fail!: %s\n",e.getMessage());
+			}
+			
+		}else if(input.equals("2")) {
+			List<User> users;
+			try {
+				users = controller.getAllClearedUsers().stream().filter((user)->user.role == UserRole.customer).collect(Collectors.toList());
+				printUsers(users);
+			} catch (Exception e) {
+				System.out.printf("Retreval of users Fail!: %s\n",e.getMessage());
+			}
+		}else if(input.equals("3")) {
+			List<Account> userAccounts;
+			try {
+				userAccounts = controller.getPendingAccounts();
+				printAccounts(userAccounts);
+				
+			} catch (Exception e) {
+				System.out.printf("Retreval of accounts Fail!: %s\n",e.getMessage());
+				return response.fail;
+			}
+			int account;
+			String approval;
+			try {
+				
+				System.out.printf("Please Select account to make approve/deny(type number):\n\t");
+				account = Integer.parseInt(scanner.nextLine().trim());
+				account--;
+				if(account < 0 || account >= userAccounts.size()) throw new Exception("invalid input");
+				System.out.printf("Please enter approve or deny:\n");
+				approval = scanner.nextLine().trim();
+				if(!(approval.equals("approve") || approval.equals("deny"))) {
+					System.out.printf("Invalid input!\n");
+					return response.fail;
+				}
+					
+			}catch(Exception e) {
+				System.out.printf("Invalid input!\n");
+				return response.fail;
+			}
+			
+			if(approval.equals("approve")) {
+				
+				try {
+					controller.verifyAccount(userAccounts.get(account));
+					System.out.printf("Approve account Succsess!\n");
+				} catch (Exception e) {
+					System.out.printf("Approve account Fail!: %s\n",e.getMessage());
+					return response.fail;
+				}
+
+			}else {
+				try {
+					controller.removeAccount((userAccounts.get(account)));
+					System.out.printf("Deny account Succsess!\n");
+				} catch (Exception e) {
+					System.out.printf("Deny account Fail!: %s\n",e.getMessage());
+					return response.fail;
+				}
+				
+			}
+		}else if(input.equals("4")) {
+			List<User> users;
+			try {
+				users = controller.getAllUsers().stream().filter((user)->!user.verified).collect(Collectors.toList());
+				printUsers(users);
+				
+			} catch (Exception e) {
+				System.out.printf("Retreval of users Fail!: %s\n",e.getMessage());
+				return response.fail;
+			}
+			int user;
+			String approval;
+			try {
+				
+				System.out.printf("Please select customer to approve/deny(type number):\n\t");
+				user = Integer.parseInt(scanner.nextLine().trim());
+				user--;
+				if(user < 0 || user >= users.size()) throw new Exception("invalid input");
+				System.out.printf("Please enter approve or deny:\n");
+				approval = scanner.nextLine().trim();
+				if(!(approval.equals("approve") || approval.equals("deny"))) {
+					System.out.printf("Invalid input!\n");
+					return response.fail;
+				}
+					
+			}catch(Exception e) {
+				System.out.printf("Invalid input!\n");
+				return response.fail;
+			}
+			
+			if(approval.equals("approve")) {
+				
+				try {
+					controller.verifyUser(users.get(user));
+					System.out.printf("Approve user Succsess!\n");
+				} catch (Exception e) {
+					System.out.printf("Approve user Fail!: %s\n",e.getMessage());
+					return response.fail;
+				}
+
+			}else {
+				try {
+					controller.removeUser(users.get(user));
+					System.out.printf("Deny user Succsess!\n");
+				} catch (Exception e) {
+					System.out.printf("Deny user Fail!: %s\n",e.getMessage());
+					return response.fail;
+				}
+				
+			}
+			
+		}else if(input.equals("5")) {
+			List<Account> userAccounts;
+			try {
+				userAccounts = controller.getAllClearedAccounts();
+				printAccounts(userAccounts);
+				
+			} catch (Exception e) {
+				System.out.printf("Retreval of accounts Fail!: %s\n",e.getMessage());
+				return response.fail;
+			}
+			int account;
+			try {
+				
+				System.out.printf("Please Select account to modify(type number):\n\t");
+				account = Integer.parseInt(scanner.nextLine().trim());
+				account--;
+				if(account < 0 || account >= userAccounts.size()) throw new Exception("invalid input");
+					
+			}catch(Exception e) {
+				System.out.printf("Invalid input!\n");
+				return response.fail;
+			}
+			modifyPrompt(scanner,controller, userAccounts.get(account));
+		}else if(input.equals("LOGOUT")) {
+			return response.logout;
+		}else {
+			System.out.printf("Invalid input!\n");
+			return response.fail;
+		}
+		
+		return response.succsess;
+	}
+
+	private static response modifyPrompt(Scanner scanner, Controller controller, Account account) {
+		System.out.printf("Please Select 1, 2, 3, 4, 5, or 6 to make selection, type LOGOUT to exit.(hit enter to submit)\n");
+		System.out.printf("\t1)Change name.\n\t2)Change holders.\n");
+		System.out.printf("\t3)Change balance.\n\t4)Change type.\n");
+		System.out.printf("\t5)Delete account.\n\t6)Cancel.\n");
+		
+		String input = scanner.nextLine();
+		input = input.trim();
+		
+		if(input.equals("1")) {
+			System.out.printf("Enter new name:\n\t");
+			String newName = scanner.nextLine().trim();
+			account.name = newName;
+		}else if(input.equals("2")) {
+			System.out.printf("Enter new holders (usernames) for the account separated by whitespace:\n\t");
+			String[] otherHolders = scanner.nextLine().trim().split("\\s+");
+			List<String> holders = new ArrayList<String>();
+			for(String holder:otherHolders) {holders.add(holder);}
+			account.holders = holders;
+		}else if(input.equals("3")) {
+			System.out.printf("Enter new balance:\n\t");
+			Long newBal;
+			try{
+				newBal = Long.parseLong(scanner.nextLine().trim());
+				if(newBal<0) throw new Exception("invalid input");
+			}catch(Exception e) {
+				System.out.printf("Invalid input!\n");
+				return response.fail;
+			}
+			account.balance = newBal;
+		}else if(input.equals("4")) {
+			System.out.printf("Enter account new type(enter saving or checking):\n\t");
+			String typeIn = scanner.nextLine().trim();
+			AccountType type;
+			if(typeIn.equals(AccountType.checking.toString())) {
+				type = AccountType.checking;
+			}else if(typeIn.equals(AccountType.saving.toString())) {
+				type = AccountType.saving;
+			}else {
+				System.out.printf("Invalid input!\n");
+				return response.fail;
+			}
+			account.type = type;
+			
+		}else if(input.equals("5")) {
+			try {
+				controller.removeAccount(account);
+				System.out.printf("Delete account Succsess!\n");
+				return response.succsess;
+			} catch (Exception e) {
+				System.out.printf("Delete account Fail!: %s\n",e.getMessage());
+				return response.fail;
+			}
+		}else if(input.equals("6")) {
+			System.out.printf("Operation canceled");
+			return response.succsess;
+		}else {
+			System.out.printf("Invalid input!\n");
+			return response.fail;
+		}
+		
+		try {
+			controller.moddifyAccount(account);
+			System.out.printf("Moddify account Succsess!\n");
+		} catch (Exception e) {
+			System.out.printf("Moddify account Fail!: %s\n",e.getMessage());
+		}
+		return response.succsess;
 	}
 }

@@ -79,6 +79,16 @@ public class Controller {
 		checkLoggedIn();
 		if(currUser.role != UserRole.admin) throw new Exception("must be an admin to moddify account");
 		
+		for(String holder : account.holders) {
+			boolean userexists = false;
+			for(User user: userDAO.users) {
+				if(user.username.contentEquals( holder)) {
+					userexists = true;
+				}
+			}
+			
+			if(!userexists) throw new Exception("can't assgin account to user that does not exist");
+		}
 		for(Account accountToChange : accountDAO.accounts) {
 			if(accountToChange.ID.equals(account.ID)) {
 				accountToChange.ID = account.ID;
